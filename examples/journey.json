@@ -1,0 +1,21 @@
+{
+  "tenant_id":"acme",
+  "journey":{
+    "name":"High Value Retention",
+    "start":"start",
+    "nodes":[
+      {"id":"start","type":"start","edges":[{"to":"vip","when":{"field":"tier","op":"eq","value":"gold"}},{"to":"standard"}]},
+      {"id":"vip","type":"message","config":{"channel":"email"},"edges":[{"to":"convert","when":{"field":"engagement_score","op":"gte","value":0.5}},{"to":"wait"}]},
+      {"id":"standard","type":"message","config":{"channel":"push"},"edges":[{"to":"wait"}]},
+      {"id":"wait","type":"wait","config":{"duration":"P1D"},"edges":[{"to":"sms"}]},
+      {"id":"sms","type":"message","config":{"channel":"sms"},"edges":[{"to":"end"}]},
+      {"id":"convert","type":"conversion","edges":[{"to":"end"}]},
+      {"id":"end","type":"end","edges":[]}
+    ]
+  },
+  "personas":[
+    {"name":"Gold engaged","count":10,"attributes":{"tier":"gold","engagement_score":0.9,"consent":true}},
+    {"name":"Standard","count":10,"attributes":{"tier":"standard","consent":true}},
+    {"name":"No consent","count":2,"attributes":{"tier":"standard","consent":false}}
+  ]
+}
